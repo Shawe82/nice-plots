@@ -9,7 +9,6 @@ import matplotlib
 Patch = matplotlib.patches.Patch
 PosVal = Tuple[float, Tuple[float, float]]
 
-
 @dataclass
 class Annotate:
     ax: matplotlib.axes.Axes
@@ -57,14 +56,16 @@ set_sizes([12, 8], 10)
 data = sns.load_dataset("iris").groupby("species").mean()
 fig, axes = plt.subplots(2, 2)
 data.plot.bar(ax=axes[0][0])
-rotate_xticks(axes[0][0],0)
-#Annotate(axes[0][0]).vertical()
 data.plot.bar(stacked=True, ax=axes[1][0])
-rotate_xticks(axes[1][0],0)
-#Annotate(axes[1][0]).vertical()
 
 data.plot.barh(ax=axes[0][1])
-#Annotate(axes[0][1]).horizontal()
 data.plot.barh(stacked=True, ax=axes[1][1])
-#Annotate(axes[1][1]).horizontal()
+
+rotate_xticks(axes[0][0],0)
+rotate_xticks(axes[1][0],0)
+
+Annotate(axes[0][0]).vertical()
+Annotate(axes[1][0]).vertical()
+Annotate(axes[0][1]).horizontal()
+Annotate(axes[1][1]).horizontal()
 plt.show()
