@@ -11,7 +11,7 @@ PosVal = Tuple[float, Tuple[float, float]]
 
 
 @dataclass
-class Annotate:
+class AnnotateBars:
     ax: matplotlib.axes.Axes
     font_size: int = 10
     color: str = "black"
@@ -71,8 +71,8 @@ data.plot.barh(stacked=True, ax=axes[1][1])
 rotate_xticks(axes[0][0], 0)
 rotate_xticks(axes[1][0], 0)
 
-Annotate(axes[0][0]).vertical()
-Annotate(axes[1][0]).vertical(True)
-Annotate(axes[0][1]).horizontal()
-Annotate(axes[1][1]).horizontal(True)
+AnnotateBars(axes[0][0]).vertical()
+AnnotateBars(axes[1][0]).vertical(True)
+AnnotateBars(axes[0][1]).horizontal()
+AnnotateBars(axes[1][1]).horizontal(True)
 plt.show()
