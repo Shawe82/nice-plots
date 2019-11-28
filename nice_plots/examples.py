@@ -9,6 +9,7 @@ import matplotlib
 Patch = matplotlib.patches.Patch
 PosVal = Tuple[float, Tuple[float, float]]
 
+
 @dataclass
 class Annotate:
     ax: matplotlib.axes.Axes
@@ -16,21 +17,26 @@ class Annotate:
     color: str = "black"
     n_dec: int = 2
 
-    def horizontal(self):
+    def horizontal(self, centered=False):
         def get_vals(p: Patch) -> PosVal:
             value = p.get_width()
-            pos = (p.get_x() + p.get_width(), p.get_y() + p.get_height() / 2)
+            div = 2 if centered else 1
+            pos = (
+                p.get_x() + p.get_width() / div,
+                p.get_y() + p.get_height() / 2,
+            )
             return value, pos
 
-        self._annotate(get_vals, ha="left", va="center")
+        self._annotate(get_vals, ha="center" if centered else "left", va="center")
 
-    def vertical(self):
+    def vertical(self, centered=False):
         def get_vals(p: Patch) -> PosVal:
             value = p.get_height()
-            pos = (p.get_x() + p.get_width() / 2, p.get_y() + p.get_height())
+            div = 2 if centered else 1
+            pos = (p.get_x() + p.get_width() / 2, p.get_y() + p.get_height() / div)
             return value, pos
 
-        self._annotate(get_vals, ha="center", va="bottom")
+        self._annotate(get_vals, ha="center", va="center" if centered else "bottom")
 
     def _annotate(self, func: Callable[[Patch], PosVal], **kwargs):
         cfg = {"color": self.color, "fontsize": self.font_size, **kwargs}
@@ -62,11 +68,11 @@ data.plot.bar(stacked=True, ax=axes[1][0])
 data.plot.barh(ax=axes[0][1])
 data.plot.barh(stacked=True, ax=axes[1][1])
 
-rotate_xticks(axes[0][0],0)
-rotate_xticks(axes[1][0],0)
+rotate_xticks(axes[0][0], 0)
+rotate_xticks(axes[1][0], 0)
 
 Annotate(axes[0][0]).vertical()
-Annotate(axes[1][0]).vertical()
+Annotate(axes[1][0]).vertical(True)
 Annotate(axes[0][1]).horizontal()
-Annotate(axes[1][1]).horizontal()
+Annotate(axes[1][1]).horizontal(True)
 plt.show()
