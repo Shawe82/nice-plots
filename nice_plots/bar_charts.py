@@ -10,16 +10,16 @@ import matplotlib
 
 Patch = matplotlib.patches.Patch
 PosVal = Tuple[float, Tuple[float, float]]
+Axis = matplotlib.axes.Axes
 
 
 @dataclass
 class AnnotateBars:
-    ax: matplotlib.axes.Axes
     font_size: int = 10
     color: str = "black"
     n_dec: int = 2
 
-    def horizontal(self, centered=False):
+    def horizontal(self, ax: Axis, centered=False):
         def get_vals(p: Patch) -> PosVal:
             value = p.get_width()
             div = 2 if centered else 1
@@ -29,22 +29,22 @@ class AnnotateBars:
             )
             return value, pos
 
-        self._annotate(get_vals, ha="center" if centered else "left", va="center")
+        self._annotate(ax, get_vals, ha="center" if centered else "left", va="center")
 
-    def vertical(self, centered=False):
+    def vertical(self, ax: Axis, centered=False):
         def get_vals(p: Patch) -> PosVal:
             value = p.get_height()
             div = 2 if centered else 1
             pos = (p.get_x() + p.get_width() / 2, p.get_y() + p.get_height() / div)
             return value, pos
 
-        self._annotate(get_vals, ha="center", va="center" if centered else "bottom")
+        self._annotate(ax, get_vals, ha="center", va="center" if centered else "bottom")
 
-    def _annotate(self, func: Callable[[Patch], PosVal], **kwargs):
+    def _annotate(self, ax: Axis, func: Callable[[Patch], PosVal], **kwargs):
         cfg = {"color": self.color, "fontsize": self.font_size, **kwargs}
-        for p in self.ax.patches:
+        for p in ax.patches:
             value, pos = func(p)
-            self.ax.annotate(f"{value:.{self.n_dec}f}", pos, **cfg)
+            ax.annotate(f"{value:.{self.n_dec}f}", pos, **cfg)
 
 
 def rotate_xticks(ax: matplotlib.axes, degrees=45):
@@ -80,9 +80,9 @@ data.plot.barh(stacked=True, ax=axes[1][1])
 rotate_xticks(axes[0][0], 0)
 rotate_xticks(axes[1][0], 0)
 
-AnnotateBars(axes[0][0]).vertical()
-AnnotateBars(axes[1][0], color="blue").vertical(True)
-AnnotateBars(axes[0][1]).horizontal()
-AnnotateBars(axes[1][1], font_size=8, n_dec=1).horizontal(True)
+AnnotateBars().vertical(axes[0][0])
+AnnotateBars(color="blue").vertical(axes[1][0], True)
+AnnotateBars().horizontal(axes[0][1])
+AnnotateBars(font_size=8, n_dec=1).horizontal(axes[1][1], True)
 save_figure(fig, "./plots/medium/bar-charts.png")
 plt.show()
