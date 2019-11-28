@@ -17,26 +17,26 @@ class AnnotateBars:
     color: str = "black"
     n_dec: int = 2
 
-    def horizontal(self, centered=False):
+    def horizontal(self, stacked=False):
         def get_vals(p: Patch) -> PosVal:
             value = p.get_width()
-            div = 2 if centered else 1
+            div = 2 if stacked else 1
             pos = (
                 p.get_x() + p.get_width() / div,
                 p.get_y() + p.get_height() / 2,
             )
             return value, pos
 
-        self._annotate(get_vals, ha="center" if centered else "left", va="center")
+        self._annotate(get_vals, ha="center" if stacked else "left", va="center")
 
-    def vertical(self, centered=False):
+    def vertical(self, stacked=False):
         def get_vals(p: Patch) -> PosVal:
             value = p.get_height()
-            div = 2 if centered else 1
+            div = 2 if stacked else 1
             pos = (p.get_x() + p.get_width() / 2, p.get_y() + p.get_height() / div)
             return value, pos
 
-        self._annotate(get_vals, ha="center", va="center" if centered else "bottom")
+        self._annotate(get_vals, ha="center", va="center" if stacked else "bottom")
 
     def _annotate(self, func: Callable[[Patch], PosVal], **kwargs):
         cfg = {"color": self.color, "fontsize": self.font_size, **kwargs}
