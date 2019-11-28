@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -59,6 +61,13 @@ def set_sizes(fig_size: Tuple[int, int] = (9, 6), font_size: int = 10):
     plt.rcParams["legend.fontsize"] = font_size
 
 
+def save_figure(fig: matplotlib.figure.Figure, path: str):
+    folder = os.path.dirname(path)
+    if folder:
+        os.makedirs(folder, exist_ok=True)
+    fig.savefig(path, bbox_inches="tight")
+
+
 set_sizes((12, 8), 10)
 data = sns.load_dataset("iris").groupby("species").mean()
 fig, axes = plt.subplots(2, 2)
@@ -75,4 +84,5 @@ AnnotateBars(axes[0][0]).vertical()
 AnnotateBars(axes[1][0], color="blue").vertical(True)
 AnnotateBars(axes[0][1]).horizontal()
 AnnotateBars(axes[1][1], font_size=8, n_dec=1).horizontal(True)
+save_figure(fig, "./plots/medium/bar-charts.png")
 plt.show()
